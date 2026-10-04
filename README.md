@@ -65,7 +65,8 @@ found. The app says so, and still reminds people never to share a code.
 - **Urdu first, made for older eyes.** All text is 26–36px, Nastaliq headings
   and Naskh body text (Noto, self-hosted), main buttons 76px or taller, no
   sign-in and no settings.
-- **Urdu voice.** Uses the phone's speech engine with an Urdu voice. If the
+- **Urdu voice.** Plays a recorded voice note if the site ships one (see
+  below). Otherwise it uses the phone's speech engine with an Urdu voice. If the
   phone has none, it uses a Hindi voice reading the same sentence written in
   Devanagari, because spoken Urdu and Hindi are the same for a sentence this
   simple. If neither exists, it says so instead of failing silently.
@@ -75,6 +76,26 @@ found. The app says so, and still reminds people never to share a code.
 - **Accessible.** Labelled fields, inline errors, focus moved to each new
   screen's heading, visible focus rings in every colour scheme, and
   `prefers-reduced-motion` respected.
+
+## Recorded voice notes
+
+A real human voice works on every phone, sounds familiar, and doesn't depend on
+an installed Urdu or Hindi voice. To add one, record these sentences and save
+them as MP3 files:
+
+| File | Sentence to read |
+| --- | --- |
+| `public/audio/scam.mp3` | یہ میسج بالکل جھوٹا ہے، اس نمبر پر واپس کال مت کریں اور نہ ہی کوئی کوڈ بتائیں۔ |
+| `public/audio/safe.mp3` | یہ میسج محفوظ لگتا ہے۔ پھر بھی کسی کو اپنا کوڈ یا پن مت بتائیں۔ |
+
+Either file can be added on its own. The build detects which ones exist (see
+`vite.config.js`), the app plays those first, and the service worker caches
+them for offline use. A verdict without a file falls back to the phone's
+speech engine. If a recording can't play, it falls back the same way. Keep the
+files small, mono at about 64 kbps (roughly 50 KB for six seconds), because
+many parents' phones are on slow or metered connections. The build warns
+about files over 300 KB. Only commit recordings of a voice whose owner agrees
+to it being published.
 
 ## Tech stack
 

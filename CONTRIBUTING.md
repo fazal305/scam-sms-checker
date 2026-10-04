@@ -29,6 +29,12 @@ against live in `src/lib/detect.test.js`.
   pattern almost never appears in a genuine message.
 - Add a genuine counter-example for every new keyword so false alarms show up.
 
+## Recorded voice notes
+
+See "Recorded voice notes" in the README for the file names, the exact
+sentences and the size guidance. Only submit a recording of your own voice, or
+one whose speaker has agreed to it being published under the MIT License.
+
 ## Things to keep in mind
 
 - **Urdu first, plain words.** Every on-screen sentence is short, simple Urdu.

@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { LINES, loadVoices, pickVoice, speechSupported } from '../lib/speech.js'
+import { LINES, loadVoices, pickVoice, recordingUrl, speechSupported } from '../lib/speech.js'
 
 const MESSAGES = {
   unavailable: 'اس فون میں اردو یا ہندی آواز موجود نہیں، اس لیے یہ جواب سنایا نہیں جا سکتا۔ اوپر لکھا جواب کسی سے پڑھوا لیں۔',
@@ -9,15 +9,40 @@ const MESSAGES = {
 export default function SpeakButton({ verdict, online }) {
   const [status, setStatus] = useState('idle')
   const utterance = useRef(null)
+  const recording = useRef(null)
 
-  useEffect(() => () => utterance.current && window.speechSynthesis.cancel(), [])
+  function silence() {
+    recording.current?.pause()
+    if (utterance.current) window.speechSynthesis.cancel()
+  }
+
+  useEffect(() => silence, [])
+
+  // A recorded voice note, when the site ships one, sounds the same on every
+  // phone and needs no installed voice; the phone's speech engine is the fallback.
+  async function playRecording(url) {
+    const audio = new Audio(url)
+    recording.current = audio
+    try {
+      await audio.play()
+    } catch {
+      recording.current = null
+      return false
+    }
+    audio.onended = () => setStatus('idle')
+    audio.onerror = () => setStatus('error')
+    setStatus('speaking')
+    return true
+  }
 
   async function speak() {
     if (status === 'speaking') {
-      window.speechSynthesis.cancel()
+      silence()
       setStatus('idle')
       return
     }
+    const url = recordingUrl(verdict)
+    if (url && (await playRecording(url))) return
     if (!speechSupported()) {
       setStatus('unavailable')
       return

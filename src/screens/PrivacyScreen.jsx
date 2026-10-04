@@ -21,8 +21,9 @@ export default function PrivacyScreen() {
           cookies, analytics or ads.
         </p>
         <p>
-          The spoken warning uses your device&apos;s own speech engine. Some browsers use online voices that send the
-          text being spoken to their provider; that text is only the fixed warning sentence, never your message. The
+          The spoken warning is a recorded voice note served with the app or, when there is none, your device&apos;s
+          own speech engine. Some browsers use online voices that send the text being spoken to their provider; that
+          text is only the fixed warning sentence, never your message. The
           WhatsApp alert (which quotes the message, with links disabled) leaves your phone only if you press send
           inside WhatsApp.
         </p>

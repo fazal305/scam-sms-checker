@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest'
 import { checkMessage, findLinks, findMobileNumbers, senderKind } from './detect.js'
 import { defangLinks, alertMessage } from './whatsapp.js'
 import { normalize } from './text.js'
+import { pickVoice, recordingUrl } from './speech.js'
 
 // Made-up messages modelled on common Pakistani SMS scams and on ordinary
 // genuine messages. No real numbers or people.
@@ -117,5 +118,22 @@ describe('whatsapp alert', () => {
     const msg = alertMessage('ا'.repeat(1000), 'https://example.test/')
     expect(msg.length).toBeLessThan(500)
     expect(msg).toContain('…')
+  })
+})
+
+describe('voice', () => {
+  const voice = (lang, localService = true) => ({ lang, localService, name: lang })
+
+  it('prefers a recorded file when the build has one', () => {
+    expect(recordingUrl('scam', ['scam'])).toBe('./audio/scam.mp3')
+    expect(recordingUrl('safe', ['scam'])).toBeNull()
+    expect(recordingUrl('scam', [])).toBeNull()
+  })
+
+  it('picks an Urdu voice, then a Hindi one, and only installed voices offline', () => {
+    expect(pickVoice([voice('hi-IN'), voice('ur_PK')]).lang).toBe('ur')
+    expect(pickVoice([voice('en-US'), voice('hi-IN')]).lang).toBe('hi')
+    expect(pickVoice([voice('ur-PK', false)], false)).toBeNull()
+    expect(pickVoice([voice('en-US')])).toBeNull()
   })
 })

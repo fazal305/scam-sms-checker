@@ -12,6 +12,13 @@ export const LINES = {
   },
 }
 
+// Filled in by vite.config.js with the verdicts that have a recorded file.
+const RECORDED = typeof __RECORDED_AUDIO__ === 'undefined' ? [] : __RECORDED_AUDIO__
+
+export function recordingUrl(verdict, available = RECORDED) {
+  return available.includes(verdict) ? `./audio/${verdict}.mp3` : null
+}
+
 const langOf = (voice) => voice.lang.toLowerCase().replace('_', '-')
 
 // Offline, only voices installed on the phone can speak.
