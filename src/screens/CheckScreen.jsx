@@ -1,8 +1,12 @@
-import { useRef, useState } from 'react'
+import { useRef, useState, useSyncExternalStore } from 'react'
 import { href } from '../hooks/useHashRoute.js'
 import { MESSAGE_MAX, SENDER_MAX } from '../lib/text.js'
 
-const canReadClipboard = typeof navigator !== 'undefined' && typeof navigator.clipboard?.readText === 'function'
+const noSubscribe = () => () => {}
+const clipboardReadable = () => typeof navigator.clipboard?.readText === 'function'
+// Prerendered HTML includes the paste button, so the layout doesn't jump on
+// load; the rare browser that can't read the clipboard hides it afterwards.
+const assumeReadable = () => true
 
 const PASTE_NOTES = {
   denied: 'فون نے اجازت نہیں دی۔ خالی خانے پر انگلی دبا کر رکھیں اور «پیسٹ» دبائیں۔',
@@ -13,6 +17,7 @@ export default function CheckScreen({ draft, onChange, onCheck }) {
   const [error, setError] = useState('')
   const [pasteNote, setPasteNote] = useState('')
   const messageRef = useRef(null)
+  const canReadClipboard = useSyncExternalStore(noSubscribe, clipboardReadable, assumeReadable)
 
   function update(field, value) {
     onChange({ ...draft, [field]: value })

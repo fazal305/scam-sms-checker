@@ -105,3 +105,17 @@ test('keeps working offline after the first visit', async ({ page, context }) =>
   await expect(page.getByRole('heading', { level: 1 })).toHaveText('🚨 یہ جھوٹا اور فراڈ میسج ہے!')
   await expect(page.getByText('انٹرنیٹ آنے پر واٹس ایپ پیغام چلا جائے گا۔')).toBeVisible()
 })
+
+test('the check screen arrives prerendered and hydrates without errors', async ({ page, request }) => {
+  const html = await (await request.get('/')).text()
+  expect(html).toContain('میسج چیک کریں')
+
+  const errors = []
+  page.on('console', (msg) => msg.type() === 'error' && errors.push(msg.text()))
+  page.on('pageerror', (error) => errors.push(error.message))
+  await page.goto('/')
+  await messageBox(page).fill(SAFE)
+  await checkButton(page).click()
+  await expect(page.getByRole('heading', { level: 1 })).toHaveText('✅ یہ میسج محفوظ لگتا ہے۔')
+  expect(errors).toEqual([])
+})

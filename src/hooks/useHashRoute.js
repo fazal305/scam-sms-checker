@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 
-function current() {
+export function current() {
+  if (typeof window === 'undefined') return 'home'
   return window.location.hash.replace(/^#\/?/, '').split('?')[0] || 'home'
 }
 
