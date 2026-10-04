@@ -1,0 +1,29 @@
+name: Missed scam or false alarm
+description: A scam the checker called safe, or a genuine message it called a scam.
+labels: [detection]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Please remove anything personal first. Replace names, phone numbers, account numbers,
+        codes and links with made-up ones (for example 0300-0000000), but keep the wording.
+  - type: dropdown
+    id: kind
+    attributes:
+      label: What went wrong?
+      options:
+        - A scam message was shown as safe (green)
+        - A genuine message was shown as a scam (red)
+    validations:
+      required: true
+  - type: textarea
+    id: message
+    attributes:
+      label: The message (with personal details replaced)
+    validations:
+      required: true
+  - type: input
+    id: sender
+    attributes:
+      label: What kind of number sent it?
+      placeholder: e.g. 8171, a normal 03xx mobile number, a bank's short code
