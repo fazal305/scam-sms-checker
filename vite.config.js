@@ -14,7 +14,7 @@ const CSP = [
   "style-src 'self'",
   "img-src 'self' data:",
   "font-src 'self'",
-  "connect-src 'self'",
+  "connect-src 'self' https://bugwatcher-pings-api.onrender.com",
   "worker-src 'self'",
   "manifest-src 'self'",
   "base-uri 'self'",
