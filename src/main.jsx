@@ -6,6 +6,28 @@ import './styles/tokens.css'
 import './styles/app.css'
 import App from './App.jsx'
 import { current } from './hooks/useHashRoute.js'
+import { init } from './lib/bugwatcher.js'
+
+const { hostname } = window.location
+const environment = /^(localhost|127\.0\.0\.1)$/.test(hostname)
+  ? 'development'
+  : /-git-|-(?=[a-z]*\d)[a-z0-9]{9}-[a-z0-9]+\.vercel\.app$|^deploy-preview-\d+--.+\.netlify\.app$/.test(hostname)
+    ? 'staging'
+    : 'production'
+
+if (environment !== 'development') {
+  let reports = 0
+  const cap = (event) => {
+    if (++reports > 20) event.stopImmediatePropagation()
+  }
+  window.addEventListener('error', cap)
+  window.addEventListener('unhandledrejection', cap)
+  init({
+    key: 'bwp_pk_PCtYJn1ZNZUZCDt2GlsDBUFx0JLkYxRxtWvUSNxT',
+    endpoint: 'https://bugwatcher-pings-api.onrender.com/api/v1/ping',
+    environment,
+  })
+}
 
 const root = document.getElementById('root')
 const app = (
