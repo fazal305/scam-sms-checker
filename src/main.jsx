@@ -5,6 +5,8 @@ import '@fontsource-variable/noto-naskh-arabic/wght.css'
 import './styles/tokens.css'
 import './styles/app.css'
 import App from './App.jsx'
+import { Analytics } from '@vercel/analytics/react'
+import { SpeedInsights } from '@vercel/speed-insights/react'
 import { current } from './hooks/useHashRoute.js'
 import { init } from './lib/bugwatcher.js'
 
@@ -28,6 +30,8 @@ const root = document.getElementById('root')
 const app = (
   <StrictMode>
     <App />
+    <Analytics />
+    <SpeedInsights />
   </StrictMode>
 )
 
